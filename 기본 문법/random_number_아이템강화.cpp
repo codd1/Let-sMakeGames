@@ -8,7 +8,7 @@ using namespace std;
 int main() {
 	
 	// 난수 발생
-	srand((unsigned int)time(0));
+	srand((unsigned int)time(0));	// 시간에 따라 매번 다른 난수 생성(seed 변경)
 
 	cout << rand() << endl;
 	cout << rand() << endl;
