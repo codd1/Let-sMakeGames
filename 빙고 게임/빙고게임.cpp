@@ -60,7 +60,12 @@ int main() {
 
 		// 플레이어에게 입력 받고 입력 받은 숫자 별 모양(INT_MAX) 값 저장
 		int input;
+		cout << "숫자를 입력해주세요(1 ~ 25): ";
 		cin >> input;
+
+		if (input == 0) {
+			break;
+		}
 
 		for (int i = 0; i < 25; i++) {
 			if (input == iNumber[i]) {
