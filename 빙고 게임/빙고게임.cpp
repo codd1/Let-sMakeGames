@@ -21,6 +21,21 @@ enum AI_MODE {
 	AM_HARD
 };
 
+enum LINE_NUMBER {
+	LN_W1,		// LINE Width (=0~4)
+	LN_W2,
+	LN_W3,
+	LN_W4,
+	LN_W5,
+	LN_H1,		// LINE Height (=5~9)
+	LN_H2,
+	LN_H3,
+	LN_H4,
+	LN_H5,
+	LN_LT,		// LINE LeftTop (=10)
+	LN_RT,		// LINE RightTop (=11)
+};
+
 int main() {
 	srand((unsigned int)time(0));
 
@@ -164,6 +179,98 @@ int main() {
 			input = iNoneSelect[rand() % iNoneSelectCount];
 			break;
 		case AM_HARD:
+			// 하드 모드는 현재 숫자 중 빙고줄 완성 가능성이 가장 높은 줄을 찾아서 그 줄에 있는 숫자 중 하나를 *로 만들어준다.
+			int iLine = 0;
+			int iStarCount = 0;
+			int iSaveMaxCount = 0;		// *이 가장 많은 줄의 *의 갯수
+
+			// 가로 세로 라인 중 가장 *이 많은 라인을 찾아낸다.
+			// 먼저 가로 라인에서 가장 *이 많은 라인을 찾는다.
+			for (int i = 0; i < 5; i++) {
+				iStarCount = 0;
+				for (int j = 0; j < 5; j++) {
+					if (iAINumber[i * 5 + j] == INT_MAX) {
+						iStarCount++;
+					}
+				}
+				if (iStarCount < 5 && iSaveMaxCount < iStarCount) {
+					iLine = i;
+					iSaveMaxCount = iStarCount;
+				}
+			}
+			// 가로 라인과 세로 라인들을 비교해 별이 가장 많은 라인을 구한다.
+			for (int i = 0; i < 5; i++) {
+				iStarCount = 0;
+				for (int j = 0; j < 5; j++) {
+					if (iAINumber[j * 5 + i] == INT_MAX) {
+						iStarCount++;
+					}
+				}
+				if (iStarCount < 5 && iSaveMaxCount < iStarCount) {
+					iLine = i + 5;		// 세로 라인은 5 ~ 9이므로 +5
+					iSaveMaxCount = iStarCount;
+				}
+			}
+
+			// ↘ 대각선 체크
+			iStarCount = 0;
+			for (int i = 0; i < 25; i += 6) {
+				if (iAINumber[i] == INT_MAX) {
+					iStarCount++;
+				}
+			}
+			if (iStarCount < 5 && iSaveMaxCount < iStarCount) {
+				iLine = LN_LT;
+				iSaveMaxCount = iStarCount;
+			}
+
+			// ↙ 대각선 체크
+			iStarCount = 0;
+			for (int i = 4; i <= 20; i += 4) {
+				if (iAINumber[i] == INT_MAX) {
+					iStarCount++;
+				}
+			}
+			if (iStarCount < 5 && iSaveMaxCount < iStarCount) {
+				iLine = LN_RT;
+				iSaveMaxCount = iStarCount;
+			}
+
+			// 모든 라인을 조사했으면 iLine에 가능성이 가장 높은 줄 번호가 저장되었다.
+			// AI가 그 줄에 있는 *이 아닌 숫자 중 하나를 선택
+			if (iLine <= LN_H5) {
+				for (int i = 0; i < 5; i++) {
+					if (iAINumber[iLine * 5 + i] != INT_MAX) {
+						input = iAINumber[iLine * 5 + i];
+						break;
+					}
+				}
+			}
+			else if (iLine <= LN_W5) {
+				for (int i = 0; i < 5; i++) {
+					// LN_W1~W5가 5~9 이므로 iLine-5를 한다. 그러면 0~4가 됨.
+					if (iAINumber[i * 5 + (iLine - 5)] != INT_MAX) {
+						input = iAINumber[i * 5 + (iLine - 5)];
+						break;
+					}
+				}
+			}
+			else if (iLine == LN_LT) {
+				for (int i = 0; i < 25; i += 6) {
+					if (iAINumber[i] != INT_MAX) {
+						input = iAINumber[i];
+						break;
+					}
+				}
+			}
+			else if (iLine == LN_RT) {
+				for (int i = 4; i <= 20; i += 4) {
+					if (iAINumber[i] != INT_MAX) {
+						input = iAINumber[i];
+						break;
+					}
+				}
+			}
 			break;
 		}
 
