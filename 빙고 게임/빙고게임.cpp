@@ -16,37 +16,73 @@
 
 using namespace std;
 
+enum AI_MODE {
+	AM_EASY = 1,
+	AM_HARD
+};
+
 int main() {
 	srand((unsigned int)time(0));
 
 	// 배열에 1~25 값 저장
 	int iNumber[25] = {};
+	int iAINumber[25] = {};
+
 	for (int i = 0; i < 25; i++) {
 		iNumber[i] = i + 1;
+		iAINumber[i] = i + 1;
 	}
 
 	// 배열 값 랜덤하게 섞기
 	int temp, idx1, idx2;
 	for (int i = 0; i < 100; i++) {
+		// 플레이어 배열 섞기
 		idx1 = rand() % 25;
 		idx2 = rand() % 25;
 
 		temp = iNumber[idx1];
 		iNumber[idx1] = iNumber[idx2];
 		iNumber[idx2] = temp;
+
+		// AI 배열 섞기
+		idx1 = rand() % 25;
+		idx2 = rand() % 25;
+
+		temp = iAINumber[idx1];
+		iAINumber[idx1] = iAINumber[idx2];
+		iAINumber[idx2] = temp;
+
 	}
 
-	int bingo = 0;	// 총 빙고 수
-	int wLine = 0;	// 가로 줄 (5라면 가로 한 줄 완성)
-	int hLine = 0;	// 세로 줄 (5라면 세로 한 줄 완성)
+	int bingo = 0, AIbingo = 0;		// 총 빙고 수
+	int wLine, hLine, dLine1, dLine2;		// 플레이어의 가로 줄, 세로 줄, 대각선줄2개
+	int wAILine, hAILine, dAILine1, dAILine2;	// AI의 ~~
 
-	int dLine1 = 0;	// 대각선 줄 (5라면 대각선 한 줄 완성)
-	int dLine2 = 0;
+	int iAIMode;
+
+	int iNoneSelect[25] = {};		// EASY 모드 AI가 선택할 숫자 목록
+	int iNoneSelectCount = 0;
+
+	// AI 난이도를 선택한다.
+	while (true) {
+		system("cls");
+
+		cout << "1. Easy" << endl;
+		cout << "2. Hard" << endl;
+		cout << "AI 모드를 선택하세요: ";
+
+		cin >> iAIMode;
+
+		if (iAIMode == AM_EASY || iAIMode == AM_HARD) {
+			break;
+		}
+	}
 
 	while (true) {
 		system("cls");
 
-		// 빙고판 출력
+		// 플레이어 5X5 빙고판 출력
+		cout << "============= Player =============" << endl;
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 5; j++) {
 				if (iNumber[i * 5 + j] == INT_MAX) {
@@ -58,8 +94,40 @@ int main() {
 			}
 			cout << endl;
 		}
+		cout << "Bingo Line: " << bingo << endl << endl;
 
-		// 플레이어에게 입력 받고 입력 받은 숫자 별 모양(INT_MAX) 값 저장
+
+		// AI 5X5 빙고판 출력
+		cout << "============== AI ==============" << endl;
+		// AI Mode 출력
+		switch (iAIMode) {
+		case AM_EASY:
+			cout << "AI Mode: EASY" << endl;
+			break;
+		case AM_HARD:
+			cout << "AI Mode: Hard" << endl;
+			break;
+		}
+
+		for (int i = 0; i < 5; i++) {
+			for (int j = 0; j < 5; j++) {
+				if (iAINumber[i * 5 + j] == INT_MAX) {
+					cout << "*\t";
+				}
+				else {
+					cout << iAINumber[i * 5 + j] << "\t";
+				}
+			}
+			cout << endl;
+		}
+		cout << "AI Bingo Line: " << AIbingo << endl << endl;
+
+
+		// 변수 초기화
+		bingo = wLine = hLine = dLine1 = dLine2 = 0;
+		AIbingo = wAILine = hAILine = dAILine1 = dAILine2 = 0;
+
+		// 플레이어가 숫자를 입력하고, 입력 받은 숫자 위치에 별 모양(INT_MAX) 값 저장
 		int input;
 		cout << "숫자를 입력해주세요(1 ~ 25): ";
 		cin >> input;
@@ -72,8 +140,46 @@ int main() {
 			if (input == iNumber[i]) {
 				iNumber[i] = INT_MAX;
 			}
+			if (input == iAINumber[i]) {
+				iAINumber[i] = INT_MAX;
+			}
 		}
 
+		// AI가 숫자를 선택한다. AI가 선택하는 것은 AI모드에 따라서 달라진다.
+		switch (iAIMode) {
+			/*
+				AI Easy 모드는 현재 AI의 숫자 목록 중
+				*로 바뀌지 않은 숫자 목록을 만들어서 그 목록 중 하나를 선택하게 한다. (랜덤하게)
+			*/
+		case AM_EASY:
+			// 지금까지 선택 안된 숫자 목록을 만들어준다.
+			iNoneSelectCount = 0;
+			for (int i = 0; i < 25; i++) {
+				if (iAINumber[i] != INT_MAX) {
+					iNoneSelect[iNoneSelectCount] = iAINumber[i];
+					iNoneSelectCount++;
+				}
+			}
+			// 남은 숫자 중 AI가 랜덤하게 선택한다.
+			input = iNoneSelect[rand() % iNoneSelectCount];
+			break;
+		case AM_HARD:
+			break;
+		}
+
+		// AI가 선택한 숫자 위치에 별 모양(INT_MAX) 값 저장
+		for (int i = 0; i < 25; i++) {
+			if (input == iNumber[i]) {
+				iNumber[i] = INT_MAX;
+			}
+			if (input == iAINumber[i]) {
+				iAINumber[i] = INT_MAX;
+			}
+		}
+
+
+
+		// 빙고 확인 - 플레이어
 
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 5; j++) {
@@ -87,17 +193,16 @@ int main() {
 				}
 			}
 			if (wLine == 5) {		// 가로 줄 빙고 확인
-				//cout << "가로 빙고 완성" << endl;
+				//cout << "가로 줄 빙고" << endl;
 				bingo++;
 			}
 			if (hLine == 5) {		// 세로 줄 빙고 확인
-				//cout << "세로 빙고 완성" << endl;
+				//cout << "세로 줄 빙고" << endl;
 				bingo++;
 			}
-			hLine = 0;
 			wLine = 0;
+			hLine = 0;
 		}
-
 		// 대각선 빙고 확인
 		for (int i = 0; i < 25; i++) {
 			// ↙ 대각선 확인
@@ -109,29 +214,68 @@ int main() {
 				dLine2++;
 			}
 		}
-
 		if (dLine1 == 5) {
-			//cout << "↙ 빙고 완성" << endl;
+			//cout << "↙ 대각선 빙고" << endl;
 			bingo++;
 		}
 		if (dLine2 == 5) {
-			//cout << "↘ 빙고 완성" << endl;
+			//cout << "↘ 대각선 빙고" << endl;
 			bingo++;
 		}
 
-		//cout << "현재 빙고 갯수: " << bingo << endl;
-		//cout << "===================================" << endl;
+
+		// 빙고 확인 - AI
+
+		for (int i = 0; i < 5; i++) {
+			for (int j = 0; j < 5; j++) {
+				// 가로 줄 확인
+				if (iAINumber[i * 5 + j] == INT_MAX) {
+					wAILine++;
+				}
+				// 세로 줄 확인
+				if (iAINumber[j * 5 + i] == INT_MAX) {
+					hAILine++;
+				}
+			}
+			if (wAILine == 5) {		// 가로 줄 빙고 확인
+				AIbingo++;
+			}
+			if (hAILine == 5) {		// 세로 줄 빙고 확인
+				AIbingo++;
+			}
+			wAILine = 0;
+			hAILine = 0;
+		}
+		// 대각선 빙고 확인
+		for (int i = 0; i < 25; i++) {
+			// ↙ 대각선 확인
+			if ((i != 0) && (i % 4 == 0) && (i < 24) && iAINumber[i] == INT_MAX) {
+				dAILine1++;
+			}
+			// ↘ 대각선 확인
+			if ((i % 6 == 0) && iAINumber[i] == INT_MAX) {
+				dAILine2++;
+			}
+		}
+		if (dAILine1 == 5) {
+			AIbingo++;
+		}
+		if (dAILine2 == 5) {
+			AIbingo++;
+		}
+
+
 
 		// 종료 조건 확인 (빙고 5개 시 종료)
 		if (bingo >= 5) {
-			cout << "Clear!!!" << endl;
+			cout << endl << "Player 승리" << endl;
+			break;
+		}
+		else if (AIbingo >= 5) {
+			cout << endl << "AI 승리" << endl;
 			break;
 		}
 
-		// 변수 초기화
-		bingo = 0;
-		dLine1 = 0;
-		dLine2 = 0;
 	}
 
 	cout << "빙고 게임이 종료되었습니다." << endl;
