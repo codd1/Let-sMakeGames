@@ -39,6 +39,7 @@ int main() {
 	int bingo = 0;	// 총 빙고 수
 	int wLine = 0;	// 가로 줄 (5라면 가로 한 줄 완성)
 	int hLine = 0;	// 세로 줄 (5라면 세로 한 줄 완성)
+
 	int dLine1 = 0;	// 대각선 줄 (5라면 대각선 한 줄 완성)
 	int dLine2 = 0;
 
@@ -84,19 +85,13 @@ int main() {
 				if (iNumber[j * 5 + i] == INT_MAX) {
 					hLine++;
 				}
-				// 대각선 ↙ 줄 별 갯수 확인
-				if ((i * 5 + j) != 0 && ((i * 5 + j) % 4) == 0 && iNumber[i * 5 + j] == INT_MAX) {
-					dLine1++;
-				}
-				// 대각선 ↘ 줄 별 갯수 확인
-				if (((i * 5 + j) % 6) == 0 && iNumber[i * 5 + j] == INT_MAX) {
-					dLine2++;
-				}
 			}
 			if (wLine == 5) {		// 가로 줄 빙고 확인
+				//cout << "가로 빙고 완성" << endl;
 				bingo++;
 			}
 			if (hLine == 5) {		// 세로 줄 빙고 확인
+				//cout << "세로 빙고 완성" << endl;
 				bingo++;
 			}
 			hLine = 0;
@@ -104,15 +99,31 @@ int main() {
 		}
 
 		// 대각선 빙고 확인
+		for (int i = 0; i < 25; i++) {
+			// ↙ 대각선 확인
+			if ((i != 0) && (i % 4 == 0) && (i < 24) && iNumber[i] == INT_MAX) {
+				dLine1++;
+			}
+			// ↘ 대각선 확인
+			if ((i % 6 == 0) && iNumber[i] == INT_MAX) {
+				dLine2++;
+			}
+		}
+
 		if (dLine1 == 5) {
+			//cout << "↙ 빙고 완성" << endl;
 			bingo++;
 		}
 		if (dLine2 == 5) {
+			//cout << "↘ 빙고 완성" << endl;
 			bingo++;
 		}
 
+		//cout << "현재 빙고 갯수: " << bingo << endl;
+		//cout << "===================================" << endl;
+
 		// 종료 조건 확인 (빙고 5개 시 종료)
-		if (bingo == 5) {
+		if (bingo >= 5) {
 			cout << "Clear!!!" << endl;
 			break;
 		}
