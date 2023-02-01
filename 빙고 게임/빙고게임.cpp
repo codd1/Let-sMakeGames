@@ -179,13 +179,16 @@ int main() {
 			input = iNoneSelect[rand() % iNoneSelectCount];
 			break;
 		case AM_HARD:
-			// 하드 모드는 현재 숫자 중 빙고줄 완성 가능성이 가장 높은 줄을 찾아서 그 줄에 있는 숫자 중 하나를 *로 만들어준다.
+			/*
+				AI Hard 모드는 현재 숫자 중 빙고줄 완성 가능성이 가장 높은 줄을 찾아서
+				그 줄에 있는 숫자 중 하나를 *로 만들어준다.
+				가장 빙고가 빨리 만들어지는 라인을 찾아서 그 라인에 있는 숫자를 선택한다.
+			*/
 			int iLine = 0;
 			int iStarCount = 0;
 			int iSaveMaxCount = 0;		// *이 가장 많은 줄의 *의 갯수
 
-			// 가로 세로 라인 중 가장 *이 많은 라인을 찾아낸다.
-			// 먼저 가로 라인에서 가장 *이 많은 라인을 찾는다.
+			// 가로 라인에서 가장 *이 많은 라인을 찾는다.
 			for (int i = 0; i < 5; i++) {
 				iStarCount = 0;
 				for (int j = 0; j < 5; j++) {
@@ -236,9 +239,9 @@ int main() {
 				iSaveMaxCount = iStarCount;
 			}
 
-			// 모든 라인을 조사했으면 iLine에 가능성이 가장 높은 줄 번호가 저장되었다.
+			// 모든 라인을 조사했으면 iLine에 가능성이 가장 높은 줄 번호가 저장된다.
 			// AI가 그 줄에 있는 *이 아닌 숫자 중 하나를 선택
-			if (iLine <= LN_H5) {
+			if (iLine <= LN_W5) {		// 가능성이 높은 곳이 가로 줄 중 하나라면
 				for (int i = 0; i < 5; i++) {
 					if (iAINumber[iLine * 5 + i] != INT_MAX) {
 						input = iAINumber[iLine * 5 + i];
@@ -246,16 +249,16 @@ int main() {
 					}
 				}
 			}
-			else if (iLine <= LN_W5) {
+			else if (iLine <= LN_H5) {	// 가능성이 높은 곳이 세로 줄 중 하나라면
 				for (int i = 0; i < 5; i++) {
-					// LN_W1~W5가 5~9 이므로 iLine-5를 한다. 그러면 0~4가 됨.
+					// LN_H1 ~ LN_H5가 5~9 이므로 iLine-5를 한다. 그러면 0~4가 됨.
 					if (iAINumber[i * 5 + (iLine - 5)] != INT_MAX) {
 						input = iAINumber[i * 5 + (iLine - 5)];
 						break;
 					}
 				}
 			}
-			else if (iLine == LN_LT) {
+			else if (iLine == LN_LT) {	// 가능성이 높은 곳이 ↘ 대각선이라면
 				for (int i = 0; i < 25; i += 6) {
 					if (iAINumber[i] != INT_MAX) {
 						input = iAINumber[i];
@@ -263,7 +266,7 @@ int main() {
 					}
 				}
 			}
-			else if (iLine == LN_RT) {
+			else if (iLine == LN_RT) {	// 가능성이 높은 곳이 ↙ 대각선이라면
 				for (int i = 4; i <= 20; i += 4) {
 					if (iAINumber[i] != INT_MAX) {
 						input = iAINumber[i];
