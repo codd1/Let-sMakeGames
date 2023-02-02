@@ -132,6 +132,54 @@ int main() {
 		break;
 	}
 
+	// 몬스터를 생성한다.
+	_tagMonster tMonsterArr[MT_BACK - 1] = {};
+
+	// 고블린 생성
+	strcpy_s(tMonsterArr[0].strName, "고블린");
+	tMonsterArr[0].iAttackMin = 20;
+	tMonsterArr[0].iAttackMax = 30;
+	tMonsterArr[0].iArmorMin = 2;
+	tMonsterArr[0].iArmorMax = 5;
+	tMonsterArr[0].iHP = 100;
+	tMonsterArr[0].iHPMax = 100;
+	tMonsterArr[0].iMP = 10;
+	tMonsterArr[0].iMPMax = 10;
+	tMonsterArr[0].iLevel = 1;
+	tMonsterArr[0].iExp = 1000;
+	tMonsterArr[0].iGoldMin = 500;
+	tMonsterArr[0].iGoldMax = 1500;
+
+	// 트롤 생성
+	strcpy_s(tMonsterArr[1].strName, "트롤");
+	tMonsterArr[1].iAttackMin = 80;
+	tMonsterArr[1].iAttackMax = 130;
+	tMonsterArr[1].iArmorMin = 60;
+	tMonsterArr[1].iArmorMax = 90;
+	tMonsterArr[1].iHP = 2000;
+	tMonsterArr[1].iHPMax = 2000;
+	tMonsterArr[1].iMP = 100;
+	tMonsterArr[1].iMPMax = 100;
+	tMonsterArr[1].iLevel = 5;
+	tMonsterArr[1].iExp = 7000;
+	tMonsterArr[1].iGoldMin = 6000;
+	tMonsterArr[1].iGoldMax = 8000;
+
+	// 드래곤 생성
+	strcpy_s(tMonsterArr[0].strName, "드래곤");
+	tMonsterArr[2].iAttackMin = 250;
+	tMonsterArr[2].iAttackMax = 500;
+	tMonsterArr[2].iArmorMin = 200;
+	tMonsterArr[2].iArmorMax = 400;
+	tMonsterArr[2].iHP = 30000;
+	tMonsterArr[2].iHPMax = 30000;
+	tMonsterArr[2].iMP = 20000;
+	tMonsterArr[2].iMPMax = 20000;
+	tMonsterArr[2].iLevel = 10;
+	tMonsterArr[2].iExp = 30000;
+	tMonsterArr[2].iGoldMin = 20000;
+	tMonsterArr[2].iGoldMax = 50000;
+
 	while (true) {
 		system("cls");
 		cout << "===================== 로비 =====================" << endl;
@@ -175,6 +223,26 @@ int main() {
 				if (iMenu == MT_BACK) {
 					break;
 				}
+
+				// 선택한 메뉴 -1은 몬스터 배열의 인덱스가 된다.
+				_tagMonster tMonster = tMonsterArr[iMenu - 1];
+
+				while (true) {
+					switch (iMenu) {
+					case MT_EASY:
+						cout << "===================== 쉬움 =====================" << endl;
+						break;
+					case MT_NORMAL:
+						cout << "===================== 보통 =====================" << endl;
+						break;
+					case MT_HARD:
+						cout << "===================== 어려움 =====================" << endl;
+						break;
+					}
+
+					// 플레이어 정보를 출력한다.
+				}
+
 			}
 			break;
 		case MM_STORE:
