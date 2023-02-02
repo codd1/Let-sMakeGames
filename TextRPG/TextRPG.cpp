@@ -64,6 +64,11 @@ enum BUY {
 	BUY_BACK
 };
 
+enum INVENTORY_MENU {
+	IM_NONE,
+	IM_BACK
+};
+
 #define NAME_SIZE			32
 #define ITEM_DESC_LENGTH	512
 #define INVENTORY_MAX		20
@@ -529,6 +534,7 @@ int main() {
 								tPlayer.tInventory.iGold -= tStoreWeapon[0].iPrice;
 								cout << "잔액: " << tPlayer.tInventory.iGold << " Gold" << endl;
 
+								strcpy_s(tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].strName, tStoreWeapon[0].strName);	  // 인벤토리 목록에 추가
 								tPlayer.tInventory.iItemCount++;
 							}
 							break;
@@ -545,6 +551,7 @@ int main() {
 								tPlayer.tInventory.iGold -= tStoreWeapon[1].iPrice;
 								cout << "잔액: " << tPlayer.tInventory.iGold << " Gold" << endl;
 
+								strcpy_s(tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].strName, tStoreWeapon[1].strName);	  // 인벤토리 목록에 추가
 								tPlayer.tInventory.iItemCount++;
 							}
 							break;
@@ -561,6 +568,7 @@ int main() {
 								tPlayer.tInventory.iGold -= tStoreWeapon[2].iPrice;
 								cout << "잔액: " << tPlayer.tInventory.iGold << " Gold" << endl;
 
+								strcpy_s(tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].strName, tStoreWeapon[2].strName);	  // 인벤토리 목록에 추가
 								tPlayer.tInventory.iItemCount++;
 							}
 							break;
@@ -608,6 +616,7 @@ int main() {
 								tPlayer.tInventory.iGold -= tStoreArmor[0].iPrice;
 								cout << "잔액: " << tPlayer.tInventory.iGold << " Gold" << endl;
 
+								strcpy_s(tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].strName, tStoreArmor[0].strName);	  // 인벤토리 목록에 추가
 								tPlayer.tInventory.iItemCount++;
 							}
 							break;
@@ -624,6 +633,7 @@ int main() {
 								tPlayer.tInventory.iGold -= tStoreArmor[1].iPrice;
 								cout << "잔액: " << tPlayer.tInventory.iGold << " Gold" << endl;
 
+								strcpy_s(tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].strName, tStoreArmor[1].strName);	  // 인벤토리 목록에 추가
 								tPlayer.tInventory.iItemCount++;
 							}
 						case BUY_THIRD:
@@ -639,6 +649,7 @@ int main() {
 								tPlayer.tInventory.iGold -= tStoreArmor[2].iPrice;
 								cout << "잔액: " << tPlayer.tInventory.iGold << " Gold" << endl;
 
+								strcpy_s(tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].strName, tStoreArmor[2].strName);	  // 인벤토리 목록에 추가
 								tPlayer.tInventory.iItemCount++;
 							}
 							break;
@@ -651,6 +662,31 @@ int main() {
 			break;
 
 		case MM_INVENTORY:
+			while (true) {
+				system("cls");
+				cout << "===================== 인벤토리 =====================" << endl;
+				for (int i = 0; i < tPlayer.tInventory.iItemCount; i++) {
+					cout << i + 1 << ". " << tPlayer.tInventory.tItem[i].strName << endl;
+				}
+				cout << endl << "총 아이템 갯수: " << tPlayer.tInventory.iItemCount << endl << endl;
+
+				cout << "1. 뒤로가기" << endl;
+				cout << "메뉴를 선택하세요: ";
+				cin >> iMenu;
+
+				if (cin.fail()) {
+					cin.clear();
+					cin.ignore(1024, '\n');
+					continue;
+				}
+
+				if (iMenu == IM_BACK) {
+					break;
+				}
+				else {
+					system("pause");
+				}
+			}
 			break;
 		default:
 			cout << "잘못 선택했습니다." << endl;
