@@ -34,7 +34,7 @@ int main() {
 	
 	_tagStudent tStudentArr[STUDENT_MAX] = {};
 	int iStudentCount = 0;
-	int iStdNumber = 1;
+	int iStdNumber = 1;		// ÇÐ¹ø - 1,2,3,4,...
 
 	char strSearchName[NAME_SIZE] = {};
 
