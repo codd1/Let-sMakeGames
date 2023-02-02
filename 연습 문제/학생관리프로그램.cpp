@@ -36,6 +36,8 @@ int main() {
 	int iStudentCount = 0;
 	int iStdNumber = 1;
 
+	char strSearchName[NAME_SIZE] = {};
+
 	while (true) {
 		system("cls");
 
@@ -113,12 +115,53 @@ int main() {
 			iStdNumber++;
 
 			cout << "학생 추가 완료" << endl;
-			
 			break;
+
 		case MENU_DELETE:
+			system("cls");
+			cout << "============ 학생 삭제 ============" << endl;
+
+			cin.ignore(1024, '\n');
+			cout << "삭제할 이름을 입력하세요: ";
+			cin.getline(strSearchName, NAME_SIZE);
+
+			for (int i = 0; i < iStudentCount; i++) {
+				if (strcmp(tStudentArr[i].strName, strSearchName) == 0) {
+					for (int j = i; j < iStudentCount - 1; j++) {
+						tStudentArr[i] = tStudentArr[i + 1];
+					}
+					iStudentCount--;
+
+					cout << "학생 정보를 삭제했습니다." << endl;
+					break;
+				}
+			}
 			break;
+
 		case MENU_SEARCH:
+			system("cls");
+			cout << "============ 학생 탐색 ============" << endl;	
+
+			cin.ignore(1024, '\n');
+			cout << "탐색할 이름을 입력하세요: ";
+			cin.getline(strSearchName, NAME_SIZE);
+			
+			for (int i = 0; i < iStudentCount; i++) {
+				if (strcmp(tStudentArr[i].strName, strSearchName) == 0) {
+					cout << "이름: " << tStudentArr[i].strName << endl;
+					cout << "주소: " << tStudentArr[i].strAdress << endl;
+					cout << "전화번호: " << tStudentArr[i].strPhoneNumber << endl;
+					cout << "학번: " << tStudentArr[i].iNumber << endl;
+					cout << "국어: " << tStudentArr[i].iKor << endl;
+					cout << "수학: " << tStudentArr[i].iMath << endl;
+					cout << "영어: " << tStudentArr[i].iEng << endl;
+					cout << "총점: " << tStudentArr[i].iTotal << endl;
+					cout << "평균: " << tStudentArr[i].fAvg << endl << endl;
+					break;
+				}
+			}
 			break;
+
 		case MENU_OUTPUT:
 			system("cls");
 			cout << "============ 학생 출력 ============" << endl;
@@ -136,6 +179,7 @@ int main() {
 			}
 
 			break;
+
 		default:
 			cout << "메뉴를 잘못 선택했습니다." << endl;
 			break;
