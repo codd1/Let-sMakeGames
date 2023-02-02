@@ -11,7 +11,6 @@
 		단, 가방이 꽉 찼거나 돈이 부족할 경우 구매하지 못하게 한다.
 	3. 인벤토리를 선택하면 인벤토리 안의 아이템을 보여준다.
 */
-
 using namespace std;
 
 enum MAIN_MENU {
@@ -55,6 +54,14 @@ enum STORE_MENU {
 	SM_WEAPON,
 	SM_ARMOR,
 	SM_BACK
+};
+
+enum BUY {
+	BUY_NONE,
+	BUY_FIRST,
+	BUY_SECOND,
+	BUY_THIRD,
+	BUY_BACK
 };
 
 #define NAME_SIZE			32
@@ -233,11 +240,66 @@ int main() {
 	tMonsterArr[2].iGoldMin = 20000;
 	tMonsterArr[2].iGoldMax = 50000;
 
+
 	// 상점에서 판매할 아이템 목록을 생성한다.
 	_tagItem tStoreWeapon[STORE_WEAPON_MAX] = {};
 	_tagItem tStoreArmor[STORE_ARMOR_MAX] = {};
 
-	// 각 아이템 정보들을 설정해준다.
+	// 무기 - 녹슨 무기 생성
+	strcpy_s(tStoreWeapon[0].strName, "녹슨 무기");
+	strcpy_s(tStoreWeapon[0].strTypeName, "무기");
+	tStoreWeapon[0].iMin = 30;
+	tStoreWeapon[0].iMax = 50;
+	tStoreWeapon[0].iPrice = 5000;
+	tStoreWeapon[0].iSell = tStoreWeapon[0].iPrice * 0.7f;
+	strcpy_s(tStoreWeapon[0].strDesc, "언제 부서질지 모르는 녹슨 무기이다.");
+
+	// 무기 - 일반 무기 생성
+	strcpy_s(tStoreWeapon[1].strName, "일반 무기");
+	strcpy_s(tStoreWeapon[1].strTypeName, "무기");
+	tStoreWeapon[1].iMin = 400;
+	tStoreWeapon[1].iMax = 500;
+	tStoreWeapon[1].iPrice = 12000;
+	tStoreWeapon[1].iSell = tStoreWeapon[1].iPrice * 0.7f;
+	strcpy_s(tStoreWeapon[1].strDesc, "평범한 무기이지만 꽤 쓸만해보인다.");
+
+	// 무기 - 스페셜 무기 생성
+	strcpy_s(tStoreWeapon[2].strName, "스페셜 무기");
+	strcpy_s(tStoreWeapon[2].strTypeName, "무기");
+	tStoreWeapon[2].iMin = 1200;
+	tStoreWeapon[2].iMax = 1500;
+	tStoreWeapon[2].iPrice = 20000;
+	tStoreWeapon[2].iSell = tStoreWeapon[2].iPrice * 0.7f;
+	strcpy_s(tStoreWeapon[2].strDesc, "이 세계에서 가장 강력한 스페셜 무기이다. 소문에 의하면 엑스칼리버라고도 불린다.");
+
+
+	// 방어구 - 낡은 방어구 생성
+	strcpy_s(tStoreArmor[0].strName, "낡은 방어구");
+	strcpy_s(tStoreArmor[0].strTypeName, "방어구");
+	tStoreArmor[0].iMin = 30;
+	tStoreArmor[0].iMax = 50;
+	tStoreArmor[0].iPrice = 5000;
+	tStoreArmor[0].iSell = tStoreArmor[0].iPrice * 0.7f;
+	strcpy_s(tStoreArmor[0].strDesc, "많이 헤진 낡은 방어구이다.");
+
+	// 방어구 - 괜찮은 방어구 생성
+	strcpy_s(tStoreArmor[1].strName, "괜찮은 방어구");
+	strcpy_s(tStoreArmor[1].strTypeName, "방어구");
+	tStoreArmor[1].iMin = 200;
+	tStoreArmor[1].iMax = 300;
+	tStoreArmor[1].iPrice = 12000;
+	tStoreArmor[1].iSell = tStoreArmor[1].iPrice * 0.7f;
+	strcpy_s(tStoreArmor[1].strDesc, "평범해보이는 쓸만한 괜찮은 방어구이다.");
+
+	// 방어구 - 스페셜 방어구 생성
+	strcpy_s(tStoreArmor[2].strName, "스페셜 방어구");
+	strcpy_s(tStoreArmor[2].strTypeName, "방어구");
+	tStoreArmor[2].iMin = 800;
+	tStoreArmor[2].iMax = 1000;
+	tStoreArmor[2].iPrice = 20000;
+	tStoreArmor[2].iSell = tStoreArmor[2].iPrice * 0.7f;
+	strcpy_s(tStoreArmor[2].strDesc, "이 세계에서 가장 강력한 스페셜 방어구이다. 전설에 의하면 아직까지 이 방어구를 뚫은 자는 아무도 없다고 한다.");
+
 
 	while (true) {
 		system("cls");
@@ -430,16 +492,164 @@ int main() {
 				case SM_WEAPON:
 					while (true) {
 						system("cls");
-
 						cout << "===================== 무기상점 =====================" << endl;
 						// 판매 목록을 보여준다.
+						for (int i = 0; i < STORE_WEAPON_MAX; i++) {
+							cout << "===================== " << i + 1 << ". " << tStoreWeapon[i].strName << " =====================" << endl;
+							cout << "아이템 타입 : " << tStoreWeapon[i].strTypeName << endl;
+							cout << "능력치: " << tStoreWeapon[i].iMin << " - " << tStoreWeapon[i].iMax << endl;
+							cout << "구매가격: " << tStoreWeapon[i].iPrice << " Gold\t판매가격: " << tStoreWeapon[i].iSell << " Gold" << endl;
+							cout << "아이템 설명: " << tStoreWeapon[i].strDesc << endl << endl;
+						}
+						cout << "===================== 4. 뒤로가기 =====================" << endl << endl;
+						cout << "현재 보유 Gold: " << tPlayer.tInventory.iGold << " Gold" << endl;
+						cout << "메뉴를 선택하세요: ";
+						cin >> iMenu;
+
+						if (cin.fail()) {
+							cin.clear();
+							cin.ignore(1024, '\n');
+							continue;
+						}
+						else if (iMenu == BUY_BACK) {
+							break;
+						}
+
+						switch (iMenu) {
+						case BUY_FIRST:
+							if (tPlayer.tInventory.iGold < tStoreWeapon[0].iPrice) {
+								cout << "구매 불가: 잔액이 부족합니다." << endl;
+							}
+							else if (tPlayer.tInventory.iItemCount == INVENTORY_MAX) {
+								cout << "구매 불가: 인벤토리 공간이 부족합니다." << endl;
+							}
+							else {
+								cout << "구매 성공: " << tStoreWeapon[0].strName << " 아이템을 구매했습니다." << endl;
+
+								tPlayer.tInventory.iGold -= tStoreWeapon[0].iPrice;
+								cout << "잔액: " << tPlayer.tInventory.iGold << " Gold" << endl;
+
+								tPlayer.tInventory.iItemCount++;
+							}
+							break;
+						case BUY_SECOND:
+							if (tPlayer.tInventory.iGold < tStoreWeapon[1].iPrice) {
+								cout << "구매 불가: 잔액이 부족합니다." << endl;
+							}
+							else if (tPlayer.tInventory.iItemCount == INVENTORY_MAX) {
+								cout << "구매 불가: 인벤토리 공간이 부족합니다." << endl;
+							}
+							else {
+								cout << "구매 성공: " << tStoreWeapon[1].strName << " 아이템을 구매했습니다." << endl;
+
+								tPlayer.tInventory.iGold -= tStoreWeapon[1].iPrice;
+								cout << "잔액: " << tPlayer.tInventory.iGold << " Gold" << endl;
+
+								tPlayer.tInventory.iItemCount++;
+							}
+							break;
+						case BUY_THIRD:
+							if (tPlayer.tInventory.iGold < tStoreWeapon[2].iPrice) {
+								cout << "구매 불가: 잔액이 부족합니다." << endl;
+							}
+							else if (tPlayer.tInventory.iItemCount == INVENTORY_MAX) {
+								cout << "구매 불가: 인벤토리 공간이 부족합니다." << endl;
+							}
+							else {
+								cout << "구매 성공: " << tStoreWeapon[2].strName << " 아이템을 구매했습니다." << endl;
+
+								tPlayer.tInventory.iGold -= tStoreWeapon[2].iPrice;
+								cout << "잔액: " << tPlayer.tInventory.iGold << " Gold" << endl;
+
+								tPlayer.tInventory.iItemCount++;
+							}
+							break;
+						}
+						system("pause");
 					}
 					break;
+
 				case SM_ARMOR:
+					while (true) {
+						system("cls");
+						cout << "===================== 방어구 상점 =====================" << endl;
+						// 판매 목록을 보여준다.
+						for (int i = 0; i < STORE_ARMOR_MAX; i++) {
+							cout << "===================== " << i + 1 << ". " << tStoreArmor[i].strName << " =====================" << endl;
+							cout << "아이템 타입 : " << tStoreArmor[i].strTypeName << endl;
+							cout << "능력치: " << tStoreArmor[i].iMin << " - " << tStoreArmor[i].iMax << endl;
+							cout << "구매가격: " << tStoreArmor[i].iPrice << " Gold\t판매가격: " << tStoreArmor[i].iSell << " Gold" << endl;
+							cout << "아이템 설명: " << tStoreArmor[i].strDesc << endl << endl;
+						}
+						cout << "===================== 4. 뒤로가기 =====================" << endl << endl;
+						cout << "메뉴를 선택하세요: ";
+						cin >> iMenu;
+
+						if (cin.fail()) {
+							cin.clear();
+							cin.ignore(1024, '\n');
+							continue;
+						}
+						else if (iMenu == BUY_BACK) {
+							break;
+						}
+
+						switch (iMenu) {
+						case BUY_FIRST:
+							if (tPlayer.tInventory.iGold < tStoreArmor[0].iPrice) {
+								cout << "구매 불가: 잔액이 부족합니다." << endl;
+							}
+							else if (tPlayer.tInventory.iItemCount == INVENTORY_MAX) {
+								cout << "구매 불가: 인벤토리 공간이 부족합니다." << endl;
+							}
+							else {
+								cout << "구매 성공: " << tStoreArmor[0].strName << " 아이템을 구매했습니다." << endl;
+
+								tPlayer.tInventory.iGold -= tStoreArmor[0].iPrice;
+								cout << "잔액: " << tPlayer.tInventory.iGold << " Gold" << endl;
+
+								tPlayer.tInventory.iItemCount++;
+							}
+							break;
+						case BUY_SECOND:
+							if (tPlayer.tInventory.iGold < tStoreArmor[1].iPrice) {
+								cout << "구매 불가: 잔액이 부족합니다." << endl;
+							}
+							else if (tPlayer.tInventory.iItemCount == INVENTORY_MAX) {
+								cout << "구매 불가: 인벤토리 공간이 부족합니다." << endl;
+							}
+							else {
+								cout << "구매 성공: " << tStoreArmor[1].strName << " 아이템을 구매했습니다." << endl;
+
+								tPlayer.tInventory.iGold -= tStoreArmor[1].iPrice;
+								cout << "잔액: " << tPlayer.tInventory.iGold << " Gold" << endl;
+
+								tPlayer.tInventory.iItemCount++;
+							}
+						case BUY_THIRD:
+							if (tPlayer.tInventory.iGold < tStoreArmor[2].iPrice) {
+								cout << "구매 불가: 잔액이 부족합니다." << endl;
+							}
+							else if (tPlayer.tInventory.iItemCount == INVENTORY_MAX) {
+								cout << "구매 불가: 인벤토리 공간이 부족합니다." << endl;
+							}
+							else {
+								cout << "구매 성공: " << tStoreArmor[2].strName << " 아이템을 구매했습니다." << endl;
+
+								tPlayer.tInventory.iGold -= tStoreArmor[2].iPrice;
+								cout << "잔액: " << tPlayer.tInventory.iGold << " Gold" << endl;
+
+								tPlayer.tInventory.iItemCount++;
+							}
+							break;
+						}
+						system("pause");
+					}
 					break;
 				}
 			}
 			break;
+
 		case MM_INVENTORY:
 			break;
 		default:
