@@ -1,8 +1,16 @@
-// 포인터 이론
+// 포인터 이론 + 포인터와 배열, void포인터, 구조체 포인터
 
 #include <iostream>
 
 using namespace std;
+
+struct _tagStudent {
+	int iKor;
+	int iEng;
+	int iMath;
+	int iTotal;
+	float fAvg;
+};
 
 int main() {
 	/*
@@ -63,6 +71,59 @@ int main() {
 	cout << *pArray << endl;
 	cout << *(pArray + 2) << endl;
 	cout << *pArray + 100 << endl;
+
+	//char *pText = "테스트 문자열";
+	//cout << pText << endl;
+
+	const char *pText = "테스트 문자열";
+
+	cout << pText << endl;
+	cout << (int*)pText << endl;
+
+	pText = "abcd";
+
+	cout << pText << endl;
+	cout << (int*)pText << endl;
+
+	char str[8] = "abcdefg";
+
+	cout << str << endl;
+	cout << (int*)str << endl;
+	
+
+	/* 구조체 포인터 */
+	_tagStudent tStudent = {};
+	tStudent.iKor = 100;
+	
+	_tagStudent* pStudent = &tStudent;
+	
+	// 연산자 우선순위 때문에 .을 먼저 인식하게 된다. 메모리 주소. 은 잘못된 문법이다.
+	// 그러므로 (*pStudent). 을 이용해서 가리키는 대상의 멤버변수에 접근해야한다.
+	(*pStudent).iKor = 50;
+	cout << tStudent.iKor << endl;
+
+	// 메모리주소-> 을 이용해서 가리키는 대상의 멤버에 접근할 수 있다. (위와 같음)
+	pStudent->iKor = 80;
+	cout << tStudent.iKor << endl;
+
+	/*
+		void 포인터: 타입이 없다.
+		void* 변수를 선언하게 되면 이 변수는 어떤 타입의 메모리 주소든 모두 저장 가능하다.
+		단, 역참조가 불가능하고 메모리 주소만 저장 가능하다.
+	*/
+	void* pVoid = &iNumber;
+	cout << "iNumber Address: " << pVoid << endl;
+	//*pVoid = 10;		<- 역참조 불가능
+	int* pConvert = (int*)pVoid;	// 캐스팅해 변환 후 사용 가능
+	*pConvert = 10;
+	//*((int*)pVoid) = 9999;		// 위와 같다.
+
+	cout << "iNumber: " << iNumber << endl;
+
+	pVoid = &tStudent;
+
+	cout << "tStudent Address: " << pVoid << endl;
+
 
 	return 0;
 }
