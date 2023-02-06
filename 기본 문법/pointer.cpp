@@ -1,4 +1,4 @@
-// 포인터 이론 + 포인터와 배열, void포인터, 구조체 포인터
+// 포인터 이론 + 포인터와 배열, void포인터, 구조체 포인터 + 이중포인터
 
 #include <iostream>
 
@@ -75,7 +75,7 @@ int main() {
 	//char *pText = "테스트 문자열";
 	//cout << pText << endl;
 
-	const char *pText = "테스트 문자열";
+	const char* pText = "테스트 문자열";
 
 	cout << pText << endl;
 	cout << (int*)pText << endl;
@@ -89,14 +89,14 @@ int main() {
 
 	cout << str << endl;
 	cout << (int*)str << endl;
-	
+
 
 	/* 구조체 포인터 */
 	_tagStudent tStudent = {};
 	tStudent.iKor = 100;
-	
+
 	_tagStudent* pStudent = &tStudent;
-	
+
 	// 연산자 우선순위 때문에 .을 먼저 인식하게 된다. 메모리 주소. 은 잘못된 문법이다.
 	// 그러므로 (*pStudent). 을 이용해서 가리키는 대상의 멤버변수에 접근해야한다.
 	(*pStudent).iKor = 50;
@@ -124,6 +124,29 @@ int main() {
 
 	cout << "tStudent Address: " << pVoid << endl;
 
+
+
+	int iNumber1 = 1111;
+	iNumber = 2222;
+	pNum = &iNumber;
+
+	/*
+		이중포인터: *을 2개 붙인다.
+		일반 포인터 변수가 일반 변수의 메모리 주소를 저장하는 변수라면 이중포인터는 포인터의 포인터이다.
+		즉, 이중포인터는 포인터 변수의 메모리 주소를 저장하는 포인터이다.
+	*/
+	int** ppNum = &pNum;
+	*pNum = 3333;
+
+	cout << endl << "iNumber: " << iNumber << endl;
+	cout << "iNumber Address: " << &iNumber << endl;
+	cout << "*pNum: " << *pNum << endl;
+	cout << "pNum Value: " << pNum << endl;
+	cout << "pNum Address:" << &pNum << endl;
+	cout << "*ppNum: " << *ppNum << endl;
+	cout << "**ppNum: " << **ppNum << endl;
+	cout << "ppNum Value: " << ppNum << endl;
+	cout << "ppNum Address: " << &ppNum << endl;
 
 	return 0;
 }
