@@ -252,6 +252,7 @@ int main() {
 	tStoreWeapon[0].iMax = 50;
 	tStoreWeapon[0].iPrice = 5000;
 	tStoreWeapon[0].iSell = tStoreWeapon[0].iPrice * 0.7f;
+	tStoreWeapon[0].eType = IT_WEAPON;
 	strcpy_s(tStoreWeapon[0].strDesc, "언제 부서질지 모르는 녹슨 무기이다.");
 
 	// 무기 - 일반 무기 생성
@@ -261,6 +262,7 @@ int main() {
 	tStoreWeapon[1].iMax = 500;
 	tStoreWeapon[1].iPrice = 12000;
 	tStoreWeapon[1].iSell = tStoreWeapon[1].iPrice * 0.7f;
+	tStoreWeapon[1].eType = IT_WEAPON;
 	strcpy_s(tStoreWeapon[1].strDesc, "평범한 무기이지만 꽤 쓸만해보인다.");
 
 	// 무기 - 스페셜 무기 생성
@@ -270,6 +272,7 @@ int main() {
 	tStoreWeapon[2].iMax = 1500;
 	tStoreWeapon[2].iPrice = 20000;
 	tStoreWeapon[2].iSell = tStoreWeapon[2].iPrice * 0.7f;
+	tStoreWeapon[2].eType = IT_WEAPON;
 	strcpy_s(tStoreWeapon[2].strDesc, "이 세계에서 가장 강력한 스페셜 무기이다. 소문에 의하면 엑스칼리버라고도 불린다.");
 
 
@@ -280,6 +283,7 @@ int main() {
 	tStoreArmor[0].iMax = 50;
 	tStoreArmor[0].iPrice = 5000;
 	tStoreArmor[0].iSell = tStoreArmor[0].iPrice * 0.7f;
+	tStoreArmor[0].eType = IT_ARMOR;
 	strcpy_s(tStoreArmor[0].strDesc, "많이 헤진 낡은 방어구이다.");
 
 	// 방어구 - 괜찮은 방어구 생성
@@ -289,6 +293,7 @@ int main() {
 	tStoreArmor[1].iMax = 300;
 	tStoreArmor[1].iPrice = 12000;
 	tStoreArmor[1].iSell = tStoreArmor[1].iPrice * 0.7f;
+	tStoreArmor[1].eType = IT_ARMOR;
 	strcpy_s(tStoreArmor[1].strDesc, "평범해보이는 쓸만한 괜찮은 방어구이다.");
 
 	// 방어구 - 스페셜 방어구 생성
@@ -298,6 +303,7 @@ int main() {
 	tStoreArmor[2].iMax = 1000;
 	tStoreArmor[2].iPrice = 20000;
 	tStoreArmor[2].iSell = tStoreArmor[2].iPrice * 0.7f;
+	tStoreArmor[2].eType = IT_ARMOR;
 	strcpy_s(tStoreArmor[2].strDesc, "이 세계에서 가장 강력한 스페셜 방어구이다. 전설에 의하면 아직까지 이 방어구를 뚫은 자는 아무도 없다고 한다.");
 
 
@@ -367,8 +373,39 @@ int main() {
 					cout << "===================== Player =====================" << endl;
 					cout << "이름: " << tPlayer.strName << "\t직업: " << tPlayer.strJobName << endl;
 					cout << "레벨: " << tPlayer.iLevel << "\t경험치: " << tPlayer.iExp << endl;
-					cout << "공격력: " << tPlayer.iAttackMin << " - " << tPlayer.iAttackMax << "\t방어력: " << tPlayer.iArmorMin << " - " << tPlayer.iArmorMax << endl;
+
+					// 무기를 장착하고 있을 경우 공격력에 무기공격력을 추가하여 출력한다.
+					if (tPlayer.bEquip[EQ_WEAPON] == true) {
+						cout << "공격력: " << tPlayer.iAttackMin << " + " << tPlayer.tEquip[EQ_WEAPON].iMin << " - " << tPlayer.iAttackMax << " + " << tPlayer.tEquip[EQ_WEAPON].iMax;
+					}
+					else {
+						cout << "공격력: " << tPlayer.iAttackMin << " - " << tPlayer.iAttackMax;
+					}
+
+					// 방어구를 장착하고 있을 경우 방어력에 방어구 방어력을 추가하여 출력한다.
+					if (tPlayer.bEquip[EQ_ARMOR] == true) {
+						cout << "\t방어력: " << tPlayer.iAttackMin << " + " << tPlayer.tEquip[EQ_ARMOR].iMin << " - " << tPlayer.iAttackMax << " + " << tPlayer.tEquip[EQ_ARMOR].iMax << endl;
+					}
+					else {
+						cout << "\t방어력: " << tPlayer.iArmorMin << " - " << tPlayer.iArmorMax << endl;
+					}
+
 					cout << "체력: " << tPlayer.iHP << " / " << tPlayer.iHPMax << "\t마나: " << tPlayer.iMP << " / " << tPlayer.iMPMax << endl;
+
+					if (tPlayer.bEquip[EQ_WEAPON]) {
+						cout << "장착무기: " << tPlayer.tEquip[EQ_WEAPON].strName;
+					}
+					else {
+						cout << "장착무기: 없음";
+					}
+
+					if (tPlayer.bEquip[EQ_ARMOR]) {
+						cout << "\t장착방어구: " << tPlayer.tEquip[EQ_ARMOR].strName << endl;
+					}
+					else {
+						cout << "\t장착방어구: 없음" << endl;
+					}
+
 					cout << "보유골드: " << tPlayer.tInventory.iGold << " Gold" << endl;
 
 					// 몬스터 정보 출력
@@ -398,7 +435,17 @@ int main() {
 						// 예를 들어 Min 5 Max 15 라고 가정할 경우
 						// 15-5+1을 하면 11이 된다. 11로 나눈 나머지는 0~10이 나오게 되고
 						// 여기에 Min값인 5를 더하게 되면 5~15 사이로 값이 나오게 된다.
-						int iAttack = rand() % (tPlayer.iAttackMax - tPlayer.iAttackMin + 1) + tPlayer.iAttackMin;
+
+						int iAttackMin = tPlayer.iAttackMin;
+						int iAttackMax = tPlayer.iAttackMax;
+
+						// 무기를 장착하고 있을 경우 무기와 Min, Max를 더해준다.
+						if (tPlayer.bEquip[EQ_WEAPON]) {
+							iAttackMin += tPlayer.tEquip[EQ_WEAPON].iMin;
+							iAttackMax += tPlayer.tEquip[EQ_WEAPON].iMax;
+						}
+
+						int iAttack = rand() % (iAttackMax - iAttackMin + 1) + iAttackMin;
 						int iArmor = rand() % (tMonster.iArmorMax - tMonster.iArmorMin + 1) + tMonster.iArmorMin;
 
 						int iDamage = iAttack - iArmor;
@@ -430,7 +477,16 @@ int main() {
 
 						// 몬스터가 살아있다면 플레이어를 공격한다.
 						iAttack = rand() % (tMonster.iAttackMax - tMonster.iAttackMin + 1) + tMonster.iAttackMin;
-						iArmor = rand() % (tPlayer.iArmorMax - tPlayer.iArmorMin + 1) + tPlayer.iArmorMin;
+
+						int iArmorMin = tPlayer.iArmorMin;
+						int iArmorMax = tPlayer.iArmorMax;
+
+						if (tPlayer.bEquip[EQ_ARMOR]) {
+							iArmorMin += tPlayer.tEquip[EQ_ARMOR].iMin;
+							iArmorMax += tPlayer.tEquip[EQ_ARMOR].iMax;
+						}
+
+						iArmor = rand() % (iArmorMax - iArmorMin + 1) + iArmorMin;
 
 						iDamage = iAttack - iArmor;
 						iDamage = iDamage < 1 ? 1 : iDamage;	// 최소 데미지값을 1로 한다.
@@ -536,6 +592,7 @@ int main() {
 								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].iSell = tStoreWeapon[0].iSell;
 								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].iMax = tStoreWeapon[0].iMax;
 								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].iMin = tStoreWeapon[0].iMin;
+								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].eType = tStoreWeapon[0].eType;
 
 								tPlayer.tInventory.iItemCount++;
 							}
@@ -560,6 +617,7 @@ int main() {
 								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].iSell = tStoreWeapon[1].iSell;
 								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].iMax = tStoreWeapon[1].iMax;
 								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].iMin = tStoreWeapon[1].iMin;
+								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].eType = tStoreWeapon[1].eType;
 
 								tPlayer.tInventory.iItemCount++;
 							}
@@ -584,6 +642,7 @@ int main() {
 								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].iSell = tStoreWeapon[2].iSell;
 								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].iMax = tStoreWeapon[2].iMax;
 								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].iMin = tStoreWeapon[2].iMin;
+								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].eType = tStoreWeapon[2].eType;
 
 								tPlayer.tInventory.iItemCount++;
 							}
@@ -639,6 +698,7 @@ int main() {
 								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].iSell = tStoreArmor[0].iSell;
 								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].iMax = tStoreArmor[0].iMax;
 								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].iMin = tStoreArmor[0].iMin;
+								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].eType = tStoreArmor[0].eType;
 
 								tPlayer.tInventory.iItemCount++;
 							}
@@ -663,6 +723,7 @@ int main() {
 								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].iSell = tStoreArmor[1].iSell;
 								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].iMax = tStoreArmor[1].iMax;
 								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].iMin = tStoreArmor[1].iMin;
+								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].eType = tStoreArmor[1].eType;
 
 								tPlayer.tInventory.iItemCount++;
 							}
@@ -687,6 +748,7 @@ int main() {
 								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].iSell = tStoreArmor[2].iSell;
 								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].iMax = tStoreArmor[2].iMax;
 								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].iMin = tStoreArmor[2].iMin;
+								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].eType = tStoreArmor[2].eType;
 
 								tPlayer.tInventory.iItemCount++;
 							}
