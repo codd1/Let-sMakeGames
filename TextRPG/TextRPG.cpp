@@ -25,7 +25,8 @@ enum JOB {
 	JOB_NONE,
 	JOB_KNIGHT,
 	JOB_ARCHER,
-	JOB_WIZARD
+	JOB_WIZARD,
+	JOB_END
 };
 
 enum BATTLE {
@@ -121,12 +122,54 @@ struct _tagMonster {
 	int iGoldMax;
 };
 
+struct _tagLevelUpStatus {
+	int iAttackMin;
+	int iAttackMax;
+	int iArmorMin;
+	int iArmorMax;
+	int iHPMin;
+	int iHPMax;
+	int iMPMin;
+	int iMPMax;
+};
+
 int main() {
 
 	srand((unsigned int)time(0));
 
 	// 레벨업에 필요한 경험치 목록을 만든다.
 	const int iLevelUpExp[LEVEL_MAX] = { 4000,10000,20000,35000,50000,70000,100000,150000,200000,400000 };
+
+	// JOB_END == 4.
+	// 직업이 3개이므로 -1 해주어서 배열을 각 직업별로 생성하도록 한다.
+	_tagLevelUpStatus tLvUpTable[JOB_END - 1] = {};
+
+	tLvUpTable[JOB_KNIGHT - 1].iAttackMin = 4;
+	tLvUpTable[JOB_KNIGHT - 1].iAttackMax = 10;
+	tLvUpTable[JOB_KNIGHT - 1].iArmorMin = 8;
+	tLvUpTable[JOB_KNIGHT - 1].iArmorMax = 16;
+	tLvUpTable[JOB_KNIGHT - 1].iHPMin = 50;
+	tLvUpTable[JOB_KNIGHT - 1].iHPMax = 100;
+	tLvUpTable[JOB_KNIGHT - 1].iMPMin = 10;
+	tLvUpTable[JOB_KNIGHT - 1].iMPMax = 20;
+
+	tLvUpTable[JOB_ARCHER - 1].iAttackMin = 10;
+	tLvUpTable[JOB_ARCHER - 1].iAttackMax = 15;
+	tLvUpTable[JOB_ARCHER - 1].iArmorMin = 5;
+	tLvUpTable[JOB_ARCHER - 1].iArmorMax = 10;
+	tLvUpTable[JOB_ARCHER - 1].iHPMin = 30;
+	tLvUpTable[JOB_ARCHER - 1].iHPMax = 60;
+	tLvUpTable[JOB_ARCHER - 1].iMPMin = 30;
+	tLvUpTable[JOB_ARCHER - 1].iMPMax = 50;
+
+	tLvUpTable[JOB_WIZARD - 1].iAttackMin = 15;
+	tLvUpTable[JOB_WIZARD - 1].iAttackMax = 20;
+	tLvUpTable[JOB_WIZARD - 1].iArmorMin = 3;
+	tLvUpTable[JOB_WIZARD - 1].iArmorMax = 7;
+	tLvUpTable[JOB_WIZARD - 1].iHPMin = 20;
+	tLvUpTable[JOB_WIZARD - 1].iHPMax = 40;
+	tLvUpTable[JOB_WIZARD - 1].iMPMin = 50;
+	tLvUpTable[JOB_WIZARD - 1].iMPMax = 100;
 
 	// 게임을 시작할 때 플레이어 정보를 설정한다.
 	_tagPlayer tPlayer = {};
@@ -484,6 +527,24 @@ int main() {
 								tPlayer.iLevel++;
 
 								cout << "레벨업 했습니다!" << endl;
+
+								// 능력치를 상승시킨다.
+								int iJobIndex = tPlayer.eJob - 1;	// 직업 인덱스
+								int iHPUp = rand() % (tLvUpTable[iJobIndex].iHPMax - tLvUpTable[iJobIndex].iHPMin + 1) + tLvUpTable[iJobIndex].iHPMin;
+								int iMPUp = rand() % (tLvUpTable[iJobIndex].iMPMax - tLvUpTable[iJobIndex].iMPMin + 1) + tLvUpTable[iJobIndex].iMPMin;
+
+								tPlayer.iAttackMin += tLvUpTable[iJobIndex].iAttackMin;
+								tPlayer.iAttackMax += tLvUpTable[iJobIndex].iAttackMax;
+								tPlayer.iArmorMin += tLvUpTable[iJobIndex].iArmorMin;
+								tPlayer.iArmorMax += tLvUpTable[iJobIndex].iArmorMax;
+
+								tPlayer.iHPMax += iHPUp;
+								tPlayer.iMPMax += iMPUp;
+
+								// 체력과 마나를 회복시킨다.
+								tPlayer.iHP = tPlayer.iHPMax;
+								tPlayer.iMP = tPlayer.iMPMax;
+
 							}
 
 							system("pause");
