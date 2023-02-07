@@ -202,7 +202,6 @@ int main() {
 	tPlayer.eJob = (JOB)iJob;
 	tPlayer.tInventory.iGold = 10000;
 
-	tPlayer.eJob = (JOB)iJob;
 	switch (tPlayer.eJob) {
 	case JOB_KNIGHT:
 		strcpy_s(tPlayer.strJobName, "±â»ç");
