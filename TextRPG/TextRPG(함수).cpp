@@ -42,6 +42,13 @@ enum EQUIP {
 	EQ_MAX
 };
 
+enum STORE_MENU {
+	SM_NONE,
+	SM_WEAPON,
+	SM_ARMOR,
+	SM_BACK
+};
+
 enum BATTLE {
 	BATTLE_NONE,
 	BATTLE_ATTACK,
@@ -134,8 +141,13 @@ void OutputBattleTag(int iMenu);
 void OutputMonster(_tagMonster* pMonster);
 void OutputPlayer(_tagPlayer* pPlayer);
 int OutputBattleMenu();
+int OutputStoreMenu();
 void Battle(_tagPlayer* pPlayer, _tagMonster* pMonster);
 _tagLevelUpStatus CreateLvUpStatus(int iAttackMin, int iAttackMax, int iArmorMin, int iArmorMax, int iHPMin, int iHPMax, int iMPMin, int iMPMax);
+void RunStore(_tagInventory* pInventory, _tagItem* pWeapon, _tagItem* pArmor);
+_tagItem CreateItem(const char* pName, ITEM_TYPE eType, int iMin, int iMax, int iPrice, int iSell, const char* pDesc);
+void BuyItem(_tagInventory* pInventory, _tagItem* pStore, int iItemCount, int iStoreType);
+int OutputStoreItemList(_tagInventory* pInventory, _tagItem* pStore, int iItemCount);
 
 int main() {
 
@@ -156,6 +168,19 @@ int main() {
 	g_tLvUpTable[JOB_ARCHER - 1] = CreateLvUpStatus(10, 15, 5, 10, 30, 60, 30, 50);
 	g_tLvUpTable[JOB_WIZARD - 1] = CreateLvUpStatus(15, 20, 3, 7, 20, 40, 50, 100);
 
+	// 상점에서 판매할 아이템 목록을 생성한다.
+	_tagItem tStoreWeapon[STORE_WEAPON_MAX] = {};
+	_tagItem tStoreArmor[STORE_ARMOR_MAX] = {};
+
+	tStoreWeapon[0] = CreateItem("녹슨 무기", IT_WEAPON, 5, 10, 1000, 500, "언제 부서질지 모르는 녹슨 무기이다.");
+	tStoreWeapon[1] = CreateItem("일반 무기", IT_WEAPON, 20, 10, 7000, 3500, "평범한 무기이지만 꽤 쓸만해보인다.");
+	tStoreWeapon[2] = CreateItem("스페셜 무기", IT_WEAPON, 90, 150, 30000, 15000, "이 세계에서 가장 강력한 스페셜 무기이다.");
+
+	tStoreArmor[0] = CreateItem("낡은 방어구", IT_ARMOR, 2, 5, 1000, 500, "많이 헤진 낡은 방어구이다.");
+	tStoreArmor[1] = CreateItem("괜찮은 방어구", IT_ARMOR, 10, 20, 7000, 3500, "평범해보이는 쓸만한 괜찮은 방어구이다.");
+	tStoreArmor[2] = CreateItem("스페셜 방어구", IT_ARMOR, 70, 90, 30000, 15000, "이 세계에서 가장 강력한 스페셜 방어구이다. 전설에 의하면 아직까지 이 방어구를 뚫은 자는 아무도 없다고 한다.");
+
+
 	bool bLoop = true;
 
 	while (bLoop) {
@@ -164,6 +189,7 @@ int main() {
 			RunMap(&tPlayer, tMonsterArr);		// 맵 관련 루프를 처리한다.
 			break;
 		case MM_STORE:
+			RunStore(&tPlayer.tInventory, tStoreWeapon, tStoreArmor);
 			break;
 		case MM_INVENTORY:
 			break;
@@ -563,4 +589,133 @@ _tagLevelUpStatus CreateLvUpStatus(int iAttackMin, int iAttackMax, int iArmorMin
 	tStatus.iMPMax = iMPMax;
 
 	return tStatus;
+}
+
+int OutputStoreMenu() {
+	system("cls");
+	cout << "===================== 상점 =====================" << endl;
+	cout << "1. 무기상점" << endl;
+	cout << "2. 방어구상점" << endl;
+	cout << "3. 뒤로가기" << endl;
+	cout << "상점을 선택하세요: ";
+	int iMenu = InputInt();
+
+	if (iMenu < SM_NONE || iMenu>SM_BACK) {
+		return SM_NONE;
+	}
+
+	return iMenu;
+}
+
+int OutputStoreItemList(_tagInventory* pInventory, _tagItem* pStore, int iItemCount) {
+	// 판매 목록을 보여준다.
+	for (int i = 0; i < iItemCount; i++) {
+		cout << "===================== " << i + 1 << ". " << pStore[i].strName << " =====================" << endl;
+		cout << "아이템 타입 : " << pStore[i].strTypeName << endl;
+		cout << "능력치: " << pStore[i].iMin << " - " << pStore[i].iMax << endl;
+		cout << "구매가격: " << pStore[i].iPrice << " Gold\t판매가격: " << pStore[i].iSell << " Gold" << endl;
+		cout << "아이템 설명: " << pStore[i].strDesc << endl << endl;
+	}
+
+	cout << "=====================" << iItemCount + 1 << ". 뒤로가기 =====================" << endl << endl;
+	cout << "현재 보유 Gold: " << pInventory->iGold << " Gold" << endl;
+	cout << "남은 공간: " << INVENTORY_MAX - pInventory->iItemCount << endl;
+	cout << "구입할 아이템을 선택하세요: ";
+	int iMenu = InputInt();
+
+	if (iMenu<1 || iMenu>iItemCount + 1) {
+		return INT_MAX;
+	}
+
+	return iMenu;
+}
+
+void BuyItem(_tagInventory* pInventory, _tagItem* pStore, int iItemCount, int iStoreType) {
+	while (true) {
+		system("cls");
+		switch (iStoreType) {
+		case SM_WEAPON:
+			cout << "===================== 무기상점 =====================" << endl;
+			break;
+		case SM_ARMOR:
+			cout << "===================== 방어구 상점 =====================" << endl;
+			break;
+		}
+
+		int iInput = OutputStoreItemList(pInventory, pStore, iItemCount);
+
+		if (iInput == INT_MAX) {
+			cout << "잘못 입력했습니다." << endl;
+			system("pause");
+			continue;
+		}
+		else if (iInput == iItemCount + 1) {
+			break;
+		}
+
+		if (pInventory->iGold < pStore[iInput - 1].iPrice) {
+			cout << "구매 불가: 잔액이 부족합니다." << endl;
+		}
+		else if (pInventory->iItemCount == INVENTORY_MAX) {
+			cout << "구매 불가: 인벤토리 공간이 부족합니다." << endl;
+		}
+		else {
+			cout << "구매 성공: " << pStore[iInput - 1].strName << " 아이템을 구매했습니다." << endl;
+
+			pInventory->iGold -= pStore[iInput - 1].iPrice;		// 골드 차감
+			cout << "잔액: " << pInventory->iGold << " Gold" << endl;
+
+			// 인벤토리에 아이템 추가
+			strcpy_s(pInventory->tItem[pInventory->iItemCount].strName, pStore[iInput - 1].strName);
+			strcpy_s(pInventory->tItem[pInventory->iItemCount].strTypeName, pStore[iInput - 1].strTypeName);
+			pInventory->tItem[pInventory->iItemCount].iPrice = pStore[iInput - 1].iPrice;
+			pInventory->tItem[pInventory->iItemCount].iSell = pStore[iInput - 1].iSell;
+			pInventory->tItem[pInventory->iItemCount].iMax = pStore[iInput - 1].iMax;
+			pInventory->tItem[pInventory->iItemCount].iMin = pStore[iInput - 1].iMin;
+			pInventory->tItem[pInventory->iItemCount].eType = pStore[iInput - 1].eType;
+
+			pInventory->iItemCount++;
+		}
+
+		system("pause");
+	}
+}
+
+void RunStore(_tagInventory* pInventory, _tagItem* pWeapon, _tagItem* pArmor) {
+	while (true) {
+		switch (OutputStoreMenu()) {
+		case SM_WEAPON:
+			BuyItem(pInventory, pWeapon, STORE_WEAPON_MAX, SM_WEAPON);
+			break;
+		case SM_ARMOR:
+			BuyItem(pInventory, pArmor, STORE_ARMOR_MAX, SM_ARMOR);
+			break;
+		case SM_BACK:
+			return;
+		}
+	}
+}
+
+_tagItem CreateItem(const char* pName, ITEM_TYPE eType, int iMin, int iMax, int iPrice, int iSell, const char* pDesc) {
+	_tagItem tItem = {};
+
+	strcpy_s(tItem.strName, pName);
+	strcpy_s(tItem.strDesc, pDesc);
+	tItem.eType = eType;
+
+	switch (eType) {
+	case IT_WEAPON:
+		strcpy_s(tItem.strTypeName, "무기");
+		break;
+	case IT_ARMOR:
+		strcpy_s(tItem.strTypeName, "방어구");
+		break;
+	}
+
+	tItem.iMin = iMin;
+	tItem.iMax = iMax;
+	tItem.iPrice = iPrice;
+	tItem.iSell = iSell;
+
+	return tItem;
 }
