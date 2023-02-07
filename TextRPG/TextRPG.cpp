@@ -663,6 +663,7 @@ int main() {
 								// 인벤토리에 아이템 추가
 								strcpy_s(tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].strName, tStoreWeapon[0].strName);
 								strcpy_s(tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].strTypeName, tStoreWeapon[0].strTypeName);
+								strcpy_s(tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].strDesc, tStoreWeapon[0].strDesc);
 								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].iPrice = tStoreWeapon[0].iPrice;
 								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].iSell = tStoreWeapon[0].iSell;
 								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].iMax = tStoreWeapon[0].iMax;
@@ -688,6 +689,7 @@ int main() {
 								// 인벤토리에 아이템 추가
 								strcpy_s(tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].strName, tStoreWeapon[1].strName);
 								strcpy_s(tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].strTypeName, tStoreWeapon[1].strTypeName);
+								strcpy_s(tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].strDesc, tStoreWeapon[1].strDesc);
 								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].iPrice = tStoreWeapon[1].iPrice;
 								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].iSell = tStoreWeapon[1].iSell;
 								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].iMax = tStoreWeapon[1].iMax;
@@ -713,6 +715,7 @@ int main() {
 								// 인벤토리에 아이템 추가
 								strcpy_s(tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].strName, tStoreWeapon[2].strName);
 								strcpy_s(tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].strTypeName, tStoreWeapon[2].strTypeName);
+								strcpy_s(tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].strDesc, tStoreWeapon[2].strDesc);
 								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].iPrice = tStoreWeapon[2].iPrice;
 								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].iSell = tStoreWeapon[2].iSell;
 								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].iMax = tStoreWeapon[2].iMax;
@@ -769,6 +772,7 @@ int main() {
 								// 인벤토리에 아이템 추가
 								strcpy_s(tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].strName, tStoreArmor[0].strName);
 								strcpy_s(tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].strTypeName, tStoreArmor[0].strTypeName);
+								strcpy_s(tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].strDesc, tStoreArmor[0].strDesc);
 								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].iPrice = tStoreArmor[0].iPrice;
 								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].iSell = tStoreArmor[0].iSell;
 								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].iMax = tStoreArmor[0].iMax;
@@ -794,6 +798,7 @@ int main() {
 								// 인벤토리에 아이템 추가
 								strcpy_s(tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].strName, tStoreArmor[1].strName);
 								strcpy_s(tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].strTypeName, tStoreArmor[1].strTypeName);
+								strcpy_s(tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].strDesc, tStoreArmor[1].strDesc);
 								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].iPrice = tStoreArmor[1].iPrice;
 								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].iSell = tStoreArmor[1].iSell;
 								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].iMax = tStoreArmor[1].iMax;
@@ -819,6 +824,7 @@ int main() {
 								// 인벤토리에 아이템 추가
 								strcpy_s(tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].strName, tStoreArmor[2].strName);
 								strcpy_s(tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].strTypeName, tStoreArmor[2].strTypeName);
+								strcpy_s(tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].strDesc, tStoreArmor[2].strDesc);
 								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].iPrice = tStoreArmor[2].iPrice;
 								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].iSell = tStoreArmor[2].iSell;
 								tPlayer.tInventory.tItem[tPlayer.tInventory.iItemCount].iMax = tStoreArmor[2].iMax;
