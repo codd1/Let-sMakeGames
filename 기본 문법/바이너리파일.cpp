@@ -19,6 +19,9 @@ typedef struct _tagStudent {
 
 int main() {
 
+	/*
+	// 바이너리 파일 만들기
+
 	STUDENT tStudent[STUDENT_MAX] = {};
 
 	for (int i = 0; i < STUDENT_MAX; i++) {
@@ -59,6 +62,36 @@ int main() {
 		}
 
 		fclose(pFile);
+	}
+	*/
+
+	STUDENT tStudent[STUDENT_MAX] = {};
+
+	FILE* pFile = NULL;
+	int iStudentCount = 0;
+
+	fopen_s(&pFile, "Student.std", "rb");
+
+	if (pFile) {
+		// 저장할 때 학생 수를 가장 먼저 저장했기 때문에 학생 수를 읽어온다.
+		fread(&iStudentCount, 4, 1, pFile);
+
+		for (int i = 0; i < iStudentCount; i++) {
+			fread(&tStudent[i], sizeof(STUDENT), 1, pFile);
+		}
+
+		fclose(pFile);
+	}
+
+	// 읽어온 학생을 출력한다.
+	for (int i = 0; i < iStudentCount; i++) {
+		cout << "이름: " << tStudent[i].strName << endl;
+		cout << "학번: " << tStudent[i].iNumber << endl;
+		cout << "국어: " << tStudent[i].iKor << endl;
+		cout << "영어: " << tStudent[i].iEng << endl;
+		cout << "수학: " << tStudent[i].iMath << endl;
+		cout << "총점: " << tStudent[i].iTotal << endl;
+		cout << "평균:" << tStudent[i].fAvg << endl << endl;
 	}
 
 	return 0;
