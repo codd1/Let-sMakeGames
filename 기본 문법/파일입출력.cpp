@@ -4,18 +4,11 @@
 
 using namespace std;
 
-void Test(int** pp) {
-	*pp = new int;
-}
-
 int main() {
-
-	//int* p = NULL;
-	//p = new int;
-	//Test(&p);
 
 	FILE* pFile = NULL;
 
+	/*
 	// 1번 인자: 파일의 이중포인터.
 	// 2번 인자: 파일 경로. (파일이 생성되는 기준 경로는 현재 프로젝트가 있는 폴더 기준이다.
 	// 만약 실행파일(.exe)로 실행했을 경우에는 해당 exe파일이 있는 경로 기준으로 생성해준다.
@@ -30,13 +23,29 @@ int main() {
 		const char* pText = "abcd";
 		// 1번 인자: 저장하고자하는 값의 메모리 주소
 		// 2번 인자: 저장하고자하는 값의 변수타입의 메모리 크기
+		// 3번 인자: 저장하고자하는 값의 갯수
+		// 4번 인자: 저장할 파일의 스트림
 		fwrite(pText, 1, 4, pFile);
 
 		fclose(pFile);
 
 		cout << "파일 만들기 성공" << endl;
 	}
+	*/
+	
+	// 파일 읽기
+	fopen_s(&pFile, "hot.txt", "rt");
 
+	if (pFile) {
+		char strText[5] = {};
+		fread(strText, 1, 4, pFile);
+
+		cout << strText << endl;
+
+		fclose(pFile);
+
+		cout << "파일 읽기 성공" << endl;
+	}
 
 	return 0;
 }
