@@ -1,4 +1,4 @@
-// 미로 게임
+// 미로 게임 파일연동
 
 #include <iostream>
 #include <conio.h>
@@ -65,8 +65,6 @@ void SetMaze(char Maze[21][21], PPOINT pPlayerPos, PPOINT pStartPos, PPOINT pEnd
 			}
 			// 파일 이름을 모두 읽었다면 문자열의 마지막에 0을 넣어서 이 문자열의 끝을 알려준다.
 			pMazeList[i][iNameCount] = 0;
-			
-			//cout << pMazeList[i] << endl;
 		}
 
 		fclose(pFile);
@@ -108,35 +106,6 @@ void SetMaze(char Maze[21][21], PPOINT pPlayerPos, PPOINT pStartPos, PPOINT pEnd
 			fclose(pFile);
 		}
 	}
-
-	/*pStartPos->x = 0;
-	pStartPos->y = 0;
-
-	pEndPos->x = 19;
-	pEndPos->y = 19;
-
-	*pPlayerPos = *pStartPos;
-
-	strcpy_s(Maze[0], "21100000000000000000");
-	strcpy_s(Maze[1], "00111111111100000000");
-	strcpy_s(Maze[2], "00100010000111111100");
-	strcpy_s(Maze[3], "01100010000000000100");
-	strcpy_s(Maze[4], "01000011110001111100");
-	strcpy_s(Maze[5], "01000000001111000000");
-	strcpy_s(Maze[6], "01100000001000000000");
-	strcpy_s(Maze[7], "00100000001111111000");
-	strcpy_s(Maze[8], "00000000000000001110");
-	strcpy_s(Maze[9], "00000111111111111000");
-	strcpy_s(Maze[10], "00111100000000000000");
-	strcpy_s(Maze[11], "00001111100000000000");
-	strcpy_s(Maze[12], "00000001111111000000");
-	strcpy_s(Maze[13], "00011111000111111000");
-	strcpy_s(Maze[14], "00010000000000110000");
-	strcpy_s(Maze[15], "00010000000000011100");
-	strcpy_s(Maze[16], "00011111100001110000");
-	strcpy_s(Maze[17], "00000111110000000000");
-	strcpy_s(Maze[18], "00001100011111011110");
-	strcpy_s(Maze[19], "00000001110001110013");*/
 }
 
 void Output(char Maze[21][21], PPOINT pPlayerPos) {
