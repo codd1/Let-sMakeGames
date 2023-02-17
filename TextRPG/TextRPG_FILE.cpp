@@ -158,6 +158,7 @@ _tagItem CreateItem(const char* pName, ITEM_TYPE eType, int iMin, int iMax, int 
 void BuyItem(_tagInventory* pInventory, _tagItem* pStore, int iItemCount, int iStoreType);
 int OutputStoreItemList(_tagInventory* pInventory, _tagItem* pStore, int iItemCount);
 void RunInventory(_tagPlayer* pPlayer);
+bool LoadStore(_tagItem* pWeapon, _tagItem* pArmor);
 
 int main() {
 
@@ -205,13 +206,15 @@ int main() {
 	_tagItem tStoreWeapon[STORE_WEAPON_MAX] = {};
 	_tagItem tStoreArmor[STORE_ARMOR_MAX] = {};
 
-	tStoreWeapon[0] = CreateItem("녹슨 무기", IT_WEAPON, 5, 10, 1000, 500, "언제 부서질지 모르는 녹슨 무기이다.");
+	/*tStoreWeapon[0] = CreateItem("녹슨 무기", IT_WEAPON, 5, 10, 1000, 500, "언제 부서질지 모르는 녹슨 무기이다.");
 	tStoreWeapon[1] = CreateItem("일반 무기", IT_WEAPON, 20, 10, 7000, 3500, "평범한 무기이지만 꽤 쓸만해보인다.");
 	tStoreWeapon[2] = CreateItem("스페셜 무기", IT_WEAPON, 90, 150, 30000, 15000, "이 세계에서 가장 강력한 스페셜 무기이다.");
 
 	tStoreArmor[0] = CreateItem("낡은 방어구", IT_ARMOR, 2, 5, 1000, 500, "많이 헤진 낡은 방어구이다.");
 	tStoreArmor[1] = CreateItem("괜찮은 방어구", IT_ARMOR, 10, 20, 7000, 3500, "평범해보이는 쓸만한 괜찮은 방어구이다.");
-	tStoreArmor[2] = CreateItem("스페셜 방어구", IT_ARMOR, 70, 90, 30000, 15000, "이 세계에서 가장 강력한 스페셜 방어구이다. 전설에 의하면 아직까지 이 방어구를 뚫은 자는 아무도 없다고 한다.");
+	tStoreArmor[2] = CreateItem("스페셜 방어구", IT_ARMOR, 70, 90, 30000, 15000, "이 세계에서 가장 강력한 스페셜 방어구이다. 전설에 의하면 아직까지 이 방어구를 뚫은 자는 아무도 없다고 한다.");*/
+
+	LoadStore(tStoreWeapon, tStoreArmor);
 
 
 	bool bLoop = true;
@@ -983,4 +986,21 @@ void RunInventory(_tagPlayer* pPlayer) {
 		cout << pPlayer->tEquip[eq].strName << " 아이템을 장착했습니다." << endl;
 		system("pause");
 	}
+}
+
+bool LoadStore(_tagItem* pWeapon, _tagItem* pArmor) {
+	FILE* pFile = NULL;
+
+	fopen_s(&pFile, "Store.str", "rb");
+
+	if (pFile) {
+		fread(pWeapon, sizeof(_tagItem), STORE_WEAPON_MAX, pFile);
+		fread(pArmor, sizeof(_tagItem), STORE_ARMOR_MAX, pFile);
+
+		fclose(pFile);
+
+		return true;
+	}
+
+	return false;
 }
