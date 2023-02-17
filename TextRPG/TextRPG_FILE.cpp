@@ -1,4 +1,4 @@
-// TextRPG 함수 이용해 정리하기
+// TextRPG - 파일로 저장 및 불러오기
 
 #include <iostream>
 #include <time.h>
@@ -736,9 +736,21 @@ _tagMonster CreateMonster(const char* pName, int iAttackMin, int iAttackMax, int
 }
 
 void SetMonster(_tagMonster* pMonsterArr) {
-	pMonsterArr[0] = CreateMonster("고블린", 20, 30, 2, 5, 100, 10, 1, 1000, 500, 1500);
+	FILE* pFile = NULL;
+
+	fopen_s(&pFile, "Monster.mst", "rb");
+
+	if (pFile) {
+		fread(pMonsterArr, sizeof(_tagMonster), MT_BACK - 1, pFile);
+		fclose(pFile);
+
+		cout << endl << "읽어오기 성공!" << endl;
+		system("pause");
+	}
+
+	/*pMonsterArr[0] = CreateMonster("고블린", 20, 30, 2, 5, 100, 10, 1, 1000, 500, 1500);
 	pMonsterArr[1] = CreateMonster("트롤", 80, 130, 60, 90, 2000, 100, 5, 7000, 6000, 8000);
-	pMonsterArr[2] = CreateMonster("드래곤", 250, 500, 200, 400, 30000, 20000, 10, 30000, 20000, 50000);
+	pMonsterArr[2] = CreateMonster("드래곤", 250, 500, 200, 400, 30000, 20000, 10, 30000, 20000, 50000);*/
 }
 
 _tagLevelUpStatus CreateLvUpStatus(int iAttackMin, int iAttackMax, int iArmorMin, int iArmorMax, int iHPMin, int iHPMax, int iMPMin, int iMPMax) {
