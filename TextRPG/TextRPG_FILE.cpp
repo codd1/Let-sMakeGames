@@ -746,9 +746,6 @@ void SetMonster(_tagMonster* pMonsterArr) {
 	if (pFile) {
 		fread(pMonsterArr, sizeof(_tagMonster), MT_BACK - 1, pFile);
 		fclose(pFile);
-
-		cout << endl << "읽어오기 성공!" << endl;
-		system("pause");
 	}
 
 	/*pMonsterArr[0] = CreateMonster("고블린", 20, 30, 2, 5, 100, 10, 1, 1000, 500, 1500);

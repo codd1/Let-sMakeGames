@@ -144,9 +144,6 @@ bool LoadMonster(_tagMonster* pMonsterArr) {
 		fread(pMonsterArr, sizeof(_tagMonster), MT_END, pFile);
 		fclose(pFile);
 
-		cout << endl << "읽어오기 성공!" << endl;
-		system("pause");
-
 		return true;
 	}
 
@@ -189,7 +186,10 @@ int main() {
 			AddMonster(tMonster);
 			break;
 		case MM_LOAD:
-			LoadMonster(tMonster);
+			if (LoadMonster(tMonster)) {
+				cout << endl << "읽어오기 성공!" << endl;
+				system("pause");
+			}
 			break;
 		case MM_SAVE:
 			if (SaveMonster(tMonster)) {
