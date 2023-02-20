@@ -1,6 +1,7 @@
 // 함수포인터와 C++11 Functional
 
 #include <iostream>
+#include <functional>
 
 using namespace std;
 
@@ -21,6 +22,11 @@ int OutSum(int a, int b) {
 
 void Output() {
 	cout << "Output Function" << endl;
+}
+
+float TestFunc(float a) {
+	cout << a << endl;
+	return a;
 }
 
 class CPlayer {
@@ -71,6 +77,36 @@ int main() {
 	void (CPlayer:: * pFunc2)() = &CPlayer::Output;
 
 	(ply1.*pFunc2)();
+
 	
+	/*
+		Functional
+		function 기능은 C++11부터 지원을 해주는 기능이다.
+		이 기능은 함수포인터를 전역, 멤버 가리지 않고 쉽게 주소를 저장해서 호출해줄 수 있도록 만들어주는 기능이다.
+		선언 방법: function<반환타입(인자타입)> 변수명; 의 형태로 선언한다.
+	*/
+
+	function<void()> func;
+	function<void()> func1;
+
+	func = bind(Output);
+	func1 = bind(&CPlayer::Output, &ply1);
+
+	cout << "============= Functional =============" << endl;
+
+	func();
+	func1();
+
+	function<int(int, int)> func3;
+	function<float(float)> func4;
+
+	// 함수에 인자가 있을 경우 placeholders 를 이용해서 인자의 순서를 정의할 수 있다. 아래처럼 2, 1로 넣어주면 인자가 서로 바뀌게 된다.
+	func3 = bind(OutSum, placeholders::_2, placeholders::_1);
+	// 위에서 2, 1로 바꿔줬으므로 10은 b에 20은 a에 들어가게 된다. -> 10 출력
+	func3(10, 20);
+
+	func4 = bind(TestFunc, placeholders::_1);
+	func4(3.14f);
+
 	return 0;
 }
