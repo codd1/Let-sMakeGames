@@ -46,6 +46,10 @@ public:
 
 protected:
 	int m_iD;
+public:
+	void ChildOutput() {
+		cout << "CChild Output Function" << endl;
+	}
 };
 
 class CChild1 :private CParent {
@@ -89,13 +93,13 @@ int main() {
 	// 부모 -> 자식 타입 형변환: 다운캐스팅
 	CParent* pParent = new CChild;
 	//CParent* pParent1 = new CChild1;
-	CParent* pParent2 = new CChildChild;
+	//CParent* pParent2 = new CChildChild;
 
 
 	// 배열로도 가능
 	CParent* pParentArr[2] = {};
-	pParentArr[0] = new CChild;
-	pParentArr[1] = new CChildChild;
+	//pParentArr[0] = new CChild;
+	//pParentArr[1] = new CChildChild;
 
 	// 아래 두 클래스는 모두 CParent 클래스를 상속받고 있다.
 	// 그러므로 pParent를 두 타입 모두 다운캐스팅 가능하다.
@@ -104,12 +108,18 @@ int main() {
 	CChild* pChild = (CChild*)pParent;		// OK
 	CChild1* pCHild1 = (CChild1*)pParent;	// Error 가능
 
+	// CChild 클래스에 있는 ChildOutput 함수에 접근할 수 없다.
+	// Why? "pParent는 CParent 포인터 타입"이기 때문에 자식 멤버에 접근이 불가능하다. 만약 접근하고 싶다면 형변환 해야한다.
+	((CChild*)pParent)->ChildOutput();
+
+	// 현재 delete를 하게 되면 CChild 소멸자 -> CParent 소멸자가 호출되어야하는데 지금은 CParent 소멸자만 호출된다.
+	// Why? 근본적으로 "pParent는 CParent 포인터 타입"이기 때문에 CChild 소멸자가 호출될 수 없다.
 	delete pParent;
-	delete pParent2;
+	//delete pParent2;
 
 	// 배열로도 가능
 	for (int i = 0; i < 2; i++) {
-		delete pParentArr[i];
+		//delete pParentArr[i];
 	}
 
 	return 0;
